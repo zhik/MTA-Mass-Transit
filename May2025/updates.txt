@@ -1,0 +1,10 @@
+Regular GTFS: This file represents the "normal" subway schedule and does not include most temporary service changes, though some long term service changes may be included. It is typically updated a few times a year.
+Supplemented GTFS: This file includes most, but not all, service changes for the next seven calendar days. Generally, the 'simpler' the service change, the more likely it will not be included. Beyond that period, service changes will not be included. It is updated hourly.
+Long Island Rail Road
+Metro-North Railroad
+Bronx (includes M100; does not include Bx23 or BxM routes)
+Brooklyn (includes Q24, Q54, Q55, Q56, Q58, Q59; does not include B100, B103, BM routes)
+Manhattan (does not include M100)
+Queens (includes most local routes and X63, X64, X68)
+Staten Island (all routes)
+MTA Bus Company (B100, B103, Bx23, BxM and QM routes, and various local routes in Queens)

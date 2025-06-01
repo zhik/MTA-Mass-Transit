@@ -268,7 +268,7 @@ def make_rail_stops_shapefiles(path, folder, rail):
     """
     try:
         counties = gpd.read_file(
-            os.path.join(path, "counties_bndry.geojson"), driver="GeoJSON"
+            os.path.join(path, "counties_bndry.geojson")
         )
         # reproject to NY State Plane
         counties = counties.to_crs(epsg=2263)
@@ -487,7 +487,7 @@ def make_bus_stops_shapefiles(path, folder):
         express_stop_shapes = express_stop_shapes.to_crs(CRS.from_epsg(2263))
 
         counties = gpd.read_file(
-            os.path.join(path, "counties_bndry.geojson"), driver="GeoJSON"
+            os.path.join(path, "counties_bndry.geojson")
         )
 
         # reproject to NY State Plane (ft)
@@ -670,20 +670,24 @@ def make_bus_routes_shapefiles(path, folder):
 def make_subway_entrances_shapefiles(path, folder):
     """Create subway entrances shapefiles from csv data
     
-    Data Source is at http://web.mta.info/developers/data/nyct/subway/StationEntrances.csv
+    Data Source is at https://data.ny.gov/Transportation/MTA-Subway-Entrances-and-Exits-2024/i9wp-a4ja/about_data
+
+    Last updated in September 25, 2024
+
+    Use https://data.ny.gov/Transportation/MTA-Subway-Stations-and-Complexes/5f5g-n3cz/about_data for ada flags
         
     Params:
         path(str): Path to the directory where GTFS data is stored
         folder (str): Name of the folder where the GTFS data is stored
             
-        Created shapefiels are stored in the 'shapes' folder in the same directory as 
+        Created shapefiles are stored in the 'shapes' folder in the same directory as 
         as the input parameters.
     """
 
     try:
         # read the entrances data directly from MTA's website
         entrances = pd.read_csv(
-            "http://web.mta.info/developers/data/nyct/subway/StationEntrances.csv"
+            "https://data.ny.gov/api/views/i9wp-a4ja/rows.csv?accessType=DOWNLOAD"
         )
 
         # write out the entrances data for archivial purposes
@@ -691,7 +695,7 @@ def make_subway_entrances_shapefiles(path, folder):
 
         # get counties to use in spatial join
         counties = gpd.read_file(
-            os.path.join(path, "counties_bndry.geojson"), driver="GeoJSON"
+            os.path.join(path, "counties_bndry.geojson")
         )
         counties = counties.to_crs(
             CRS.from_epsg(2263)
@@ -701,34 +705,19 @@ def make_subway_entrances_shapefiles(path, folder):
         entrances.columns = [
             "division",
             "line",
+            "boro",
             "stn_name",
-            "stn_Lat",
-            "stn_Lon",
-            "route_1",
-            "route_2",
-            "route_3",
-            "route_4",
-            "route_5",
-            "route_6",
-            "route_7",
-            "route_8",
-            "route_9",
-            "route_10",
-            "route_11",
+            "complex_id",
+            "cons_stns",
+            "stn_id",
+            "gtfs_stop",
+            "day_route",
             "entr_type",
             "entry",
-            "exit_only",
-            "vending",
-            "staffing",
-            "staff_hour",
-            "ada",
-            "ada_notes",
-            "free_cross",
-            "n_s_Street",
-            "e_w_Street",
-            "corner",
+            "exit",
             "lat",
             "lon",
+            "wkt"
         ]
 
         # one of the longtitudes is missing negative sign
@@ -742,10 +731,8 @@ def make_subway_entrances_shapefiles(path, folder):
             entrances_shapes, counties, how="inner", predicate="intersects"
         ).drop(
             "index_right", axis=1
-        )  # spatially join entraces to counties layer
-        # change data type of the ADA and free_cross columns -- boolean fields can't be written into shapefile
-        entrances_shapes["ada"] = entrances_shapes["ada"].astype(str)
-        entrances_shapes["free_cross"] = entrances_shapes["free_cross"].astype(str)
+        )  # spatially join entrances to counties layer
+
         entrances_shapes.to_file(
             os.path.join(
                 path, folder, "shapes", f"subway_entrances_{monthYear.lower()}.shp"
