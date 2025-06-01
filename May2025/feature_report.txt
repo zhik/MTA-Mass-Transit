@@ -9,7 +9,4 @@ Feature count for bus_routes_nyc_may2025.shp = 507
 Feature count for express_bus_routes_nyc_may2025.shp = 158
 Feature count for bus_stops_nyc_may2025.shp = 20064
 Feature count for express_bus_stops_nyc_may2025.shp = 4363
-Feature count for subway_entrances_may2025.shp = 445
-Feature count for subway_entrances_may2025.shp = 445
-Feature count for subway_entrances_may2025.shp = 445
 Feature count for subway_entrances_may2025.shp = 2120
